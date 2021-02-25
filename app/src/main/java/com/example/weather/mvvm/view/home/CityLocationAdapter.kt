@@ -5,10 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weather.R
+import com.example.weather.database.dao.WeatherDatabase
 import com.example.weather.mvvm.model.CityLocation
 import kotlinx.android.synthetic.main.layout_city_location_items.view.*
+import kotlinx.coroutines.*
 
 class CityLocationAdapter(private val cityList:ArrayList<CityLocation>,
+                          private var db:WeatherDatabase?,
     var onItemClicked: ((CityLocation) -> Unit)):
     RecyclerView.Adapter<CityLocationAdapter.ViewHolder>() {
 
@@ -16,7 +19,9 @@ class CityLocationAdapter(private val cityList:ArrayList<CityLocation>,
 
         init {
             itemView.imgDelete.setOnClickListener {
-                removeItem(adapterPosition)
+                GlobalScope.launch(Dispatchers.Main) {
+                    removeItem(adapterPosition)
+                }
             }
 
             itemView.setOnClickListener {
@@ -26,12 +31,15 @@ class CityLocationAdapter(private val cityList:ArrayList<CityLocation>,
 
         fun bindItem(cityLocation: CityLocation) {
             itemView.txtCityName.text = cityLocation.cityName
-            itemView.txtLat.text = cityLocation.lat.toString()
-            itemView.txtLng.text = cityLocation.lng.toString()
+            itemView.txtLat.text = "Latitude : ${cityLocation.lat}"
+            itemView.txtLng.text = "Longitude : ${cityLocation.lng}"
         }
     }
 
-    private fun removeItem(adapterPosition: Int) {
+    private suspend fun removeItem(adapterPosition: Int) {
+        GlobalScope.async {
+            db?.weatherDao()?.deleteWeatherDetails(cityList[adapterPosition])
+        }
         cityList.removeAt(adapterPosition)
         notifyItemRemoved(adapterPosition)
     }
