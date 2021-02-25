@@ -5,6 +5,9 @@ import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -15,6 +18,7 @@ import com.example.weather.database.dao.WeatherDatabase
 import com.example.weather.mvvm.model.CityLocation
 import com.example.weather.mvvm.model.WeatherResponse
 import com.example.weather.mvvm.view.city.CityFragment
+import com.example.weather.mvvm.view.help.HelpFragment
 import com.example.weather.mvvm.view.home.HomeFragment
 import com.example.weather.mvvm.view.home.OnFragmentCallback
 import com.example.weather.mvvm.viewModel.MainActivityViewModel
@@ -158,5 +162,18 @@ class MainActivity : AppCompatActivity(), OnFragmentCallback, OnMapReadyCallback
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.settings_menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.helpMenu -> {
+                launchFragment(HelpFragment.getInstance(),true,HelpFragment::class.java.name)
+            }
+        }
+        return true
+    }
 
 }

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Weather</string>
     <string name="add_location">Add Location</string>
+    <string name="how_to_use_app">How to Use App</string>
+    <string name="use_of_app_desc">
+        * First add location \n* Select any place on map \n* Go back to main screen to see city \n* Click on saved city to see weather details
+    </string>
 </resources>
